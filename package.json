@@ -1,0 +1,23 @@
+{
+  "name": "oci-aws-s3-pre-signed-post",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.847.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hitrov/oci-aws-s3-pre-signed-post.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hitrov/oci-aws-s3-pre-signed-post/issues"
+  },
+  "homepage": "https://github.com/hitrov/oci-aws-s3-pre-signed-post#readme"
+}
