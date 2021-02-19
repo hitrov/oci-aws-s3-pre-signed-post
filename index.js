@@ -4,8 +4,8 @@ const http = require('http');
 const AWS = require('aws-sdk');
 
 // const PROVIDER = 'ibm';
-// const PROVIDER = 'aws';
-const PROVIDER = 'oci';
+const PROVIDER = 'aws';
+// const PROVIDER = 'oci';
 let REGION;
 let BUCKET;
 let NAMESPACE;
@@ -20,10 +20,10 @@ const clientOptions = {
 switch (PROVIDER) {
     case 'aws':
         REGION = 'eu-central-1';
-        BUCKET = 'test2021feb10';
+        BUCKET = 'test20feb2021';
         ACCESS_KEY_ID = '';
         SECRET_ACCESS_KEY = '';
-        FORM_ACTION = 'https://test2021feb10.s3.eu-central-1.amazonaws.com';
+        FORM_ACTION = `https://${BUCKET}.s3.eu-central-1.amazonaws.com`;
 
         clientOptions.s3ForcePathStyle = false;
         break;
