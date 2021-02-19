@@ -29,8 +29,8 @@ switch (PROVIDER) {
         break;
     case 'oci':
         REGION = 'eu-frankfurt-1';
-        BUCKET = 'test20210205';
-        NAMESPACE = 'frpegpxf8trx';
+        BUCKET = 'test20210214';
+        NAMESPACE = 'frdtj2fg48gb';
         ENDPOINT = `https://${NAMESPACE}.compat.objectstorage.${REGION}.oraclecloud.com`;
         ACCESS_KEY_ID = '';
         SECRET_ACCESS_KEY = '';
