@@ -1,27 +1,69 @@
 const http = require('http');
 
 // Load the SDK
-var AWS = require('aws-sdk');
-var REGION = 'eu-frankfurt-1';
-AWS.config.update({region: REGION});
-var STORAGE_NAMESPACE = 'frpegpxf8trx';
-var ACCESS_KEY = ''; // todo
-var SECRETE_KEY = ''; // todo
-var BUCKET = 'test20210205';
+const AWS = require('aws-sdk');
 
-// Set up options to use for API client
-var clientOptions = {
+// const PROVIDER = 'ibm';
+// const PROVIDER = 'aws';
+const PROVIDER = 'oci';
+let REGION;
+let BUCKET;
+let NAMESPACE;
+let ENDPOINT;
+let ACCESS_KEY_ID;
+let SECRET_ACCESS_KEY;
+let FORM_ACTION;
+const clientOptions = {
     signatureVersion: 'v4',
-    sslEnabled: true,
-    accessKeyId: ACCESS_KEY,
-    secretAccessKey: SECRETE_KEY,
-    endpoint: 'https://' + STORAGE_NAMESPACE + '.compat.objectstorage.' + REGION + '.oraclecloud.com'
+    sslEnabled: true
 };
+switch (PROVIDER) {
+    case 'aws':
+        REGION = 'eu-central-1';
+        BUCKET = 'test2021feb10';
+        ACCESS_KEY_ID = '';
+        SECRET_ACCESS_KEY = '';
+        FORM_ACTION = 'https://test2021feb10.s3.eu-central-1.amazonaws.com';
+
+        clientOptions.s3ForcePathStyle = false;
+        break;
+    case 'oci':
+        REGION = 'eu-frankfurt-1';
+        BUCKET = 'test20210205';
+        NAMESPACE = 'frpegpxf8trx';
+        ENDPOINT = `https://${NAMESPACE}.compat.objectstorage.${REGION}.oraclecloud.com`;
+        ACCESS_KEY_ID = '';
+        SECRET_ACCESS_KEY = '';
+        FORM_ACTION = `${ENDPOINT}/${BUCKET}`
+
+        clientOptions.endpoint = ENDPOINT;
+        clientOptions.s3ForcePathStyle = true;
+        break;
+    case 'ibm':
+        REGION = 'eu-geo';
+        BUCKET = 'test202102144';
+        ENDPOINT ='https://s3.eu.cloud-object-storage.appdomain.cloud';
+        ACCESS_KEY_ID = '';
+        SECRET_ACCESS_KEY = '';
+        FORM_ACTION = 'https://test202102144.s3.eu.cloud-object-storage.appdomain.cloud';
+
+        clientOptions.endpoint = ENDPOINT;
+        clientOptions.s3ForcePathStyle = false;
+        break;
+    default:
+        throw new Error(`\nERROR: Unknown provider ${PROVIDER}`);
+}
+
+AWS.config.update({region: REGION});
+
+clientOptions.accessKeyId = ACCESS_KEY_ID;
+clientOptions.secretAccessKey = SECRET_ACCESS_KEY;
+
 console.log('\nClient Options: \n' + JSON.stringify(clientOptions, null, 2));
 
 // Create API client
 console.log('\nCreating API client...');
-var apiClient = new AWS.S3(clientOptions);
+const apiClient = new AWS.S3(clientOptions);
 
 // Make sure client object is valid
 if (!apiClient) {
@@ -31,8 +73,6 @@ if (!apiClient) {
 const params = apiClient.createPresignedPost({
     Bucket: BUCKET,
     Conditions: [
-        ['acl', 'private'],
-        ['bucket', BUCKET],
         ['starts-with', '$key', ''],
     ],
 })
@@ -47,7 +87,7 @@ const template = `
     <title>Title</title>
 </head>
 <body>
-<form method="post" action="${params.url}">
+<form method="post" enctype="multipart/form-data" action="${FORM_ACTION}">
     <input type="text" name="bucket" value="${bucket}">
     <input type="text" name="X-Amz-Algorithm" value="${algo}">
     <input type="text" name="X-Amz-Credential" value="${cred}">
@@ -55,6 +95,7 @@ const template = `
     <input type="text" name="Policy" value="${policy}">
     <input type="text" name="X-Amz-Signature" value="${signature}">
 
+    <input type="text" name="key" value="\${filename}" /> <br />
     <input type="file" name="file" id="file" /> <br />
     <input type="submit" name="submit" value="Upload" />
 </form>
