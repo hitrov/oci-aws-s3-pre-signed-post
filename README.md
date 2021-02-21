@@ -1,4 +1,4 @@
-Example PHP script `index.js` shows how to create native HTML form for direct uploading files into S3-compatible Object Storage of major cloud providers:
+Example Node.JS script (JavaScript) `index.js` shows how to create native HTML form for direct uploading files into S3-compatible Object Storage of major cloud providers:
 - Amazon Web Services Simple Storage Service (S3)
 - IBM Object Storage
 - Oracle Cloud Infrastructure Object Storage
